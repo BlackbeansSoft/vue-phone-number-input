@@ -233,7 +233,7 @@
       }
     },
     async mounted () {
-      window.addEventListener('resize', this.resizeHandler)
+      window.addEventListener('resize', this.onResize)
       try {
         if (this.phoneNumber && this.defaultCountryCode) this.emitValues({countryCode: this.defaultCountryCode, phoneNumber: this.phoneNumber})
 
@@ -260,34 +260,31 @@
       window.removeEventListener('resize', function(){})
     },
     methods: {
-      resizeHandler () {
-        console.log('haha')
-      },
       onResize () {
         const vuePhoneNumberInput = this.$refs.vuePhoneNumberInput
-        const input = vuePhoneNumberInput.getBoundingClientRect()
-        console.log(input.x)
-        if (input.y > (window.innerHeight - input.height - this.countrySelectorHeight - 4)) {
-          if (input.y > (this.countrySelectorHeigh + 4)) {
-            // country selector show top
-            this.countrySelectorTop = input.y - this.countrySelectorHeigh - 4
-            this.countrySelectorLeft = input.x
-          } else {
-            // country selector show right
-            if (input.x > (window.innerWidth - input.width - this.countrySelectorWidth - 4)) {
-              this.countrySelectorTop = input.y - (this.countrySelectorHeigh / 2)
-              this.countrySelectorLeft = input.x + this.countrySelectorWidth + 4
+        if (vuePhoneNumberInput) {
+          const input = vuePhoneNumberInput.getBoundingClientRect()
+          if (input.y > (window.innerHeight - input.height - this.countrySelectorHeight - 4)) {
+            if (input.y > (this.countrySelectorHeight + 4)) {
+              // country selector show top
+              this.countrySelectorTop = input.y - this.countrySelectorHeight - 4
+              this.countrySelectorLeft = input.x
             } else {
-              // country selector show left
-              this.countrySelectorTop = input.y - (this.countrySelectorHeigh / 2)
-              this.countrySelectorLeft = input.x - this.countrySelectorWidth - 4
+              // country selector show right
+              if (input.x > (window.innerWidth - input.width - this.countrySelectorWidth - 4)) {
+                this.countrySelectorTop = input.y - (this.countrySelectorHeight / 2)
+                this.countrySelectorLeft = input.x + this.countrySelectorWidth + 4
+              } else {
+                // country selector show left
+                this.countrySelectorTop = input.y - (this.countrySelectorHeight / 2)
+                this.countrySelectorLeft = input.x - this.countrySelectorWidth - 4
+              }
             }
-
+          } else {
+            // country selector show bottom
+            this.countrySelectorTop = input.y + input.height + 4
+            this.countrySelectorLeft = input.x
           }
-        } else {
-          // country selector show bottom
-          this.countrySelectorTop = input.y + input.height + 4
-          this.countrySelectorLeft = input.x
         }
       },
       getAsYouTypeFormat (payload) {

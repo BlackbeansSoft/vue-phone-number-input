@@ -304,7 +304,7 @@
     min-height: 40px;
     z-index: 0;
     user-select: none;
-
+    background: rebeccapurple;
     &:hover {
       z-index: 1;
     }

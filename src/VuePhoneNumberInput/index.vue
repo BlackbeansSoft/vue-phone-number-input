@@ -264,26 +264,26 @@
         const vuePhoneNumberInput = this.$refs.vuePhoneNumberInput
         const input = vuePhoneNumberInput.getBoundingClientRect()
 
-        if (input.y > (window.innerHeight - input.height - this.countrySelectorHeight - 6)) {
-          if (input.y > (this.countrySelectorHeigh + 6)) {
+        if (input.y > (window.innerHeight - input.height - this.countrySelectorHeight - 4)) {
+          if (input.y > (this.countrySelectorHeigh + 4)) {
             // country selector show top
-            this.countrySelectorTop = input.y - this.countrySelectorHeigh - 6
+            this.countrySelectorTop = input.y - this.countrySelectorHeigh - 4
             this.countrySelectorLeft = input.x
           } else {
             // country selector show right
-            if (input.x > (window.innerWidth - input.width - this.countrySelectorWidth - 6)) {
+            if (input.x > (window.innerWidth - input.width - this.countrySelectorWidth - 4)) {
               this.countrySelectorTop = input.y - (this.countrySelectorHeigh / 2)
-              this.countrySelectorLeft = input.x + this.countrySelectorWidth + 6
+              this.countrySelectorLeft = input.x + this.countrySelectorWidth + 4
             } else {
               // country selector show left
               this.countrySelectorTop = input.y - (this.countrySelectorHeigh / 2)
-              this.countrySelectorLeft = input.x - this.countrySelectorWidth - 6
+              this.countrySelectorLeft = input.x - this.countrySelectorWidth - 4
             }
 
           }
         } else {
           // country selector show bottom
-          this.countrySelectorTop = input.y + input.height + 6
+          this.countrySelectorTop = input.y + input.height + 4
           this.countrySelectorLeft = input.x
         }
       },

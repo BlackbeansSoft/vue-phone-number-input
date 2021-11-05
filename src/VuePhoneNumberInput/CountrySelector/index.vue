@@ -383,7 +383,7 @@
       background-color: $bg-color;
       overflow: hidden;
       box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-      z-index: 9;
+      z-index: 9999;
       list-style: none;
       overflow-y: auto;
       overflow-x: hidden;

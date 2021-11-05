@@ -1,6 +1,7 @@
 <template>
   <div
     :id="id"
+    ref="vuePhoneNumberInput"
     :class="[{ 'dark': dark }, size]"
     class="vue-phone-number-input flex"
   >
@@ -27,7 +28,12 @@
         :size="size"
         :dark="dark"
         :theme="theme"
+        :selector-top="countrySelectorTop"
+        :selector-left="countrySelectorLeft"
+        :selector-width="countrySelectorWidth"
+        :selector-height="countrySelectorHeight"
         class="input-country-selector"
+        @focus-country-selector="onResize"
       >
         <slot
           slot="arrow"
@@ -115,13 +121,17 @@
       noCountrySelector: { type: Boolean, default: false },
       showCodeOnList: { type: Boolean, default: false },
       dark: { type: Boolean, default: false },
-      borderRadius: { type: Number, default: 4 }
+      borderRadius: { type: Number, default: 4 },
+      countrySelectorWidth: { type: Number, default: 230 },
+      countrySelectorHeight: { type: Number, default: 160 }
     },
     data () {
       return {
         results: {},
         userLocale: this.defaultCountryCode,
-        lastKeyPressed: null
+        lastKeyPressed: null,
+        countrySelectorLeft: 0,
+        countrySelectorTop: 0
       }
     },
     computed: {
@@ -223,6 +233,7 @@
       }
     },
     async mounted () {
+      window.addEventListener('resize', this.onResize())
       try {
         if (this.phoneNumber && this.defaultCountryCode) this.emitValues({countryCode: this.defaultCountryCode, phoneNumber: this.phoneNumber})
 
@@ -245,7 +256,37 @@
         throw new Error(err)
       }
     },
+    beforeDestroy () {
+      window.removeEventListener('resize')
+    },
     methods: {
+      onResize () {
+        const vuePhoneNumberInput = this.$refs.vuePhoneNumberInput
+        const input = vuePhoneNumberInput.getBoundingClientRect()
+
+        if (input.y > (window.innerHeight - input.height - this.countrySelectorHeight - 6)) {
+          if (input.y > (this.countrySelectorHeigh + 6)) {
+            // country selector show top
+            this.countrySelectorTop = input.y - this.countrySelectorHeigh - 6
+            this.countrySelectorLeft = input.x
+          } else {
+            // country selector show right
+            if (input.x > (window.innerWidth - input.width - this.countrySelectorWidth - 6)) {
+              this.countrySelectorTop = input.y - (this.countrySelectorHeigh / 2)
+              this.countrySelectorLeft = input.x + this.countrySelectorWidth + 6
+            } else {
+              // country selector show left
+              this.countrySelectorTop = input.y - (this.countrySelectorHeigh / 2)
+              this.countrySelectorLeft = input.x - this.countrySelectorWidth - 6
+            }
+
+          }
+        } else {
+          // country selector show bottom
+          this.countrySelectorTop = input.y + input.height + 6
+          this.countrySelectorLeft = input.x
+        }
+      },
       getAsYouTypeFormat (payload) {
         const { countryCode, phoneNumber } = payload
         const asYouType = new AsYouType(countryCode)

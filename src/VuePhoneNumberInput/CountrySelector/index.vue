@@ -33,7 +33,7 @@
       class="country-selector__input"
       readonly
       :style="[radiusLeftStyle, inputBorderStyle, inputBoxShadowStyle, inputBgColor]"
-      @focus="isFocus = true"
+      @focus="focusHandler"
       @keydown="keyboardNav"
       @click.stop="toggleList"
     >
@@ -74,7 +74,7 @@
         ref="countriesList"
         class="country-selector__list"
         :class="{ 'has-calling-code': showCodeOnList }"
-        :style="[radiusStyle, listHeight, inputBgColor]"
+        :style="[radiusStyle, listHeight, inputBgColor, {top: selectorTop + 'px', left: selectorLeft + 'px', width: selectorWidth + 'px', height: selectorHeight + 'px'}]"
       >
         <RecycleScroller
           v-slot="{ item }"
@@ -145,7 +145,11 @@
       ignoredCountries: { type: Array, default: null },
       noFlags: { type: Boolean, default: false },
       countriesHeight: { type: Number, default: 35 },
-      showCodeOnList: { type: Boolean, default: false }
+      showCodeOnList: { type: Boolean, default: false },
+      selectorTop: { type: Number, default: 0 },
+      selectorLeft: { type: Number, default: 0 },
+      selectorWidth: { type: Number, default: 0 },
+      selectorHeight: { type: Number, default: 0 }
     },
     data () {
       return {
@@ -286,6 +290,10 @@
             this.scrollToSelectedOnFocus(resultIndex + (this.preferredCountries ? this.preferredCountries.length : 0))
           }
         }
+      },
+      focusHandler () {
+        this.$emit('focus-country-selector')
+        this.isFocus = true
       }
     }
   }
@@ -304,7 +312,6 @@
     min-height: 40px;
     z-index: 0;
     user-select: none;
-    background: rebeccapurple;
     &:hover {
       z-index: 1;
     }
@@ -372,11 +379,7 @@
     }
 
     &__list {
-      max-width: 100%;
-      top: 100%;
-      width: 100%;
-      min-width: 230px;
-      position: absolute;
+      position: fixed;
       background-color: $bg-color;
       overflow: hidden;
       box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);

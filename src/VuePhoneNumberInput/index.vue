@@ -233,7 +233,7 @@
       }
     },
     async mounted () {
-      window.addEventListener('resize', this.onResize())
+      window.addEventListener('resize', this.resizeHandler)
       try {
         if (this.phoneNumber && this.defaultCountryCode) this.emitValues({countryCode: this.defaultCountryCode, phoneNumber: this.phoneNumber})
 
@@ -257,13 +257,16 @@
       }
     },
     beforeDestroy () {
-      window.removeEventListener('resize')
+      window.removeEventListener('resize', function(){})
     },
     methods: {
+      resizeHandler () {
+        console.log('haha')
+      },
       onResize () {
         const vuePhoneNumberInput = this.$refs.vuePhoneNumberInput
         const input = vuePhoneNumberInput.getBoundingClientRect()
-
+        console.log(input.x)
         if (input.y > (window.innerHeight - input.height - this.countrySelectorHeight - 4)) {
           if (input.y > (this.countrySelectorHeigh + 4)) {
             // country selector show top
